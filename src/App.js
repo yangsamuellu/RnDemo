@@ -95,8 +95,8 @@ export class App extends Component {
                                         transform: [{translateY: Animated.multiply(this.nativeScroll, 0.5)}, {scale: imageScale}]
                                     }}>
                         <LinearGradient
-                            colors={["rgba(255,255,255,0.6)", "rgba(255,255,255,0.3)", "rgba(255,255,255,0)"]}
-                            locations={[0, 0.2, 1]}
+                            colors={["rgba(255,255,255,0.8)", "rgba(255,255,255,0.3)", "rgba(255,255,255,0)"]}
+                            locations={[0, 0.3, 1]}
                             style={{
                                 position: "absolute",
                                 top: 0,
