@@ -7,24 +7,25 @@ const {width: SCREEN_WIDTH} = Dimensions.get("window");
 const IMAGE_HEIGHT = 250;
 const HEADER_HEIGHT = 64;
 const SCROLL_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT;
-const COLOR = "#55baff";
+const COLOR = "rgba(85,186,255, 1)";
+const FADED_COLOR = "rgba(85,186,255, 0.8)";
 
 export class ParallaxDemo extends Component {
     nativeScroll = new Animated.Value(0);
     scroll = new Animated.Value(0);
     tabTextColor = this.scroll.interpolate({
-        inputRange: [0, (SCROLL_HEIGHT) / 5, SCROLL_HEIGHT],
-        outputRange: [COLOR, "rgba(230,230,230,1)", "rgba(255,255,255,1)"],
+        inputRange: [0, SCROLL_HEIGHT * 0.2, SCROLL_HEIGHT],
+        outputRange: [COLOR, FADED_COLOR, "white"],
         extrapolate: "clamp"
     });
     tabColor = this.scroll.interpolate({
         inputRange: [0, SCROLL_HEIGHT],
-        outputRange: ["rgba(255,255,255,1)", COLOR],
+        outputRange: ["white", COLOR],
         extrapolate: "clamp"
     });
     titleColor = this.scroll.interpolate({
         inputRange: [0, (SCROLL_HEIGHT) / 6],
-        outputRange: [COLOR, "rgba(255,255,255,1)"],
+        outputRange: ["black", "white"],
         extrapolate: "clamp"
     });
     tabContent = (<List>
@@ -63,7 +64,7 @@ export class ParallaxDemo extends Component {
         });
         const headerColor = this.scroll.interpolate({
             inputRange: [0, SCROLL_HEIGHT, SCROLL_HEIGHT + 1],
-            outputRange: ["rgba(255,255,255,0)", "rgba(255,255,255,0)", COLOR],
+            outputRange: ["transparent", "transparent", COLOR],
             extrapolate: "clamp"
         });
         const imageScale = this.nativeScroll.interpolate({
@@ -142,7 +143,8 @@ export class ParallaxDemo extends Component {
                                 width: "100%",
                                 backgroundColor: "white"
                             }}>
-                            <ScrollableTab {...props} renderTab={(...args) => this.renderTab(...args)}
+                            <ScrollableTab {...props}
+                                           renderTab={(...args) => this.renderTab(...args)}
                                            underlineStyle={{backgroundColor: this.tabTextColor}}/>
                         </Animated.View>
                     }}>
