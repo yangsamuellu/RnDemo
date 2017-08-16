@@ -7,20 +7,20 @@ const {width: SCREEN_WIDTH} = Dimensions.get("window");
 const IMAGE_HEIGHT = 250;
 const HEADER_HEIGHT = 64;
 const SCROLL_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT;
-const COLOR = "rgba(85,186,255, 1)";
-const FADED_COLOR = "rgba(85,186,255, 0.8)";
+const THEME_COLOR = "rgba(85,186,255, 1)";
+const FADED_THEME_COLOR = "rgba(85,186,255, 0.8)";
 
 export class ParallaxDemo extends Component {
   nScroll = new Animated.Value(0);
   scroll = new Animated.Value(0);
   textColor = this.scroll.interpolate({
     inputRange: [0, SCROLL_HEIGHT / 5, SCROLL_HEIGHT],
-    outputRange: [COLOR, FADED_COLOR, "white"],
+    outputRange: [THEME_COLOR, FADED_THEME_COLOR, "white"],
     extrapolate: "clamp"
   });
   tabBg = this.scroll.interpolate({
     inputRange: [0, SCROLL_HEIGHT],
-    outputRange: ["white", COLOR],
+    outputRange: ["white", THEME_COLOR],
     extrapolate: "clamp"
   });
   tabY = this.nScroll.interpolate({
@@ -29,7 +29,7 @@ export class ParallaxDemo extends Component {
   });
   headerBg = this.scroll.interpolate({
     inputRange: [0, SCROLL_HEIGHT, SCROLL_HEIGHT + 1],
-    outputRange: ["transparent", "transparent", COLOR],
+    outputRange: ["transparent", "transparent", THEME_COLOR],
     extrapolate: "clamp"
   });
   imgScale = this.nScroll.interpolate({
@@ -70,11 +70,12 @@ export class ParallaxDemo extends Component {
           style={{zIndex: 0}}>
           <Animated.View style={{
             transform: [{translateY: Animated.multiply(this.nScroll, 0.65)}, {scale: this.imgScale}],
-            backgroundColor: COLOR
+            backgroundColor: THEME_COLOR
           }}>
             <Animated.Image
               source={{uri: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Moraine_Lake_17092005.jpg"}}
               style={{height: IMAGE_HEIGHT, width: "100%", opacity: this.imgOpacity}}>
+              {/*gradient*/}
               <LinearGradient
                 colors={["rgba(255,255,255,0.9)", "rgba(255,255,255,0.35)", "rgba(255,255,255,0)"]}
                 locations={[0, 0.25, 1]}
@@ -85,11 +86,21 @@ export class ParallaxDemo extends Component {
             style={{transform: [{translateY: this.tabY}], zIndex: 1, width: "100%", backgroundColor: "white"}}>
             <ScrollableTab {...props}
                            renderTab={(name, page, active, onPress, onLayout) => (
-                             <TouchableOpacity key={page} onPress={() => onPress(page)} onLayout={onLayout}
+                             <TouchableOpacity key={page}
+                                               onPress={() => onPress(page)}
+                                               onLayout={onLayout}
                                                activeOpacity={0.4}>
-                               <Animated.View style={{flex: 1, height: 100, backgroundColor: this.tabBg}}>
+                               <Animated.View
+                                 style={{
+                                   flex: 1,
+                                   height: 100,
+                                   backgroundColor: this.tabBg
+                                 }}>
                                  <TabHeading scrollable
-                                             style={{backgroundColor: "transparent", width: SCREEN_WIDTH / 2}}
+                                             style={{
+                                               backgroundColor: "transparent",
+                                               width: SCREEN_WIDTH / 2
+                                             }}
                                              active={active}>
                                    <Animated.Text style={{
                                      fontWeight: active ? "bold" : "normal",
