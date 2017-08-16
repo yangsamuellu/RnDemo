@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import {Animated, Dimensions, Text, TouchableOpacity} from "react-native";
-import {Body, Container, Header, List, ListItem, ScrollableTab, Tab, TabHeading, Tabs, Title} from "native-base";
+import {Animated, Dimensions, Text, TouchableOpacity, View} from "react-native";
+import {Body, Header, List, ListItem, ScrollableTab, Tab, TabHeading, Tabs, Title} from "native-base";
 import LinearGradient from "react-native-linear-gradient";
 
 const {width: SCREEN_WIDTH} = Dimensions.get("window");
@@ -23,14 +23,32 @@ export class ParallaxDemo extends Component {
         outputRange: ["white", COLOR],
         extrapolate: "clamp"
     });
-    titleColor = this.scroll.interpolate({
-        inputRange: [0, (SCROLL_HEIGHT) / 6],
-        outputRange: ["black", "white"],
+    tabScroll = this.nativeScroll.interpolate({
+        inputRange: [0, SCROLL_HEIGHT, SCROLL_HEIGHT + 1],
+        outputRange: [0, 0, 1]
+    });
+    headerColor = this.scroll.interpolate({
+        inputRange: [0, SCROLL_HEIGHT, SCROLL_HEIGHT + 1],
+        outputRange: ["transparent", "transparent", COLOR],
         extrapolate: "clamp"
     });
+    imageScale = this.nativeScroll.interpolate({
+        inputRange: [-25, 0],
+        outputRange: [1.1, 1],
+        extrapolateRight: "clamp"
+    });
+    imageOpacity = this.nativeScroll.interpolate({
+        inputRange: [0, SCROLL_HEIGHT],
+        outputRange: [1, 0],
+        extrapolate: "clamp"
+    });
+    tabProps = {
+        tabStyle: {backgroundColor: "transparent", width: SCREEN_WIDTH / 2},
+        activeTabStyle: {backgroundColor: "transparent", width: SCREEN_WIDTH / 2}
+    };
     tabContent = (<List>
         {new Array(20).fill(null).map((_, i) => {
-            return (<ListItem>
+            return (<ListItem key={i}>
                 <Text>Item {i}</Text>
             </ListItem>)
         })}
@@ -42,13 +60,12 @@ export class ParallaxDemo extends Component {
     }
 
     renderTab(name, page, isTabActive, onPressHandler, onLayoutHandler, tabStyle, activeTabStyle) {
-        const fontWeight = isTabActive ? "bold" : "normal";
         return (
             <TouchableOpacity key={page} onPress={() => onPressHandler(page)} onLayout={onLayoutHandler}
                               activeOpacity={0.4}>
                 <Animated.View style={{flex: 1, height: 100, backgroundColor: this.tabColor}}>
                     <TabHeading scrollable style={isTabActive ? activeTabStyle : tabStyle} active={isTabActive}>
-                        <Animated.Text style={{fontWeight: fontWeight, color: this.tabTextColor, fontSize: 14}}>
+                        <Animated.Text style={{fontWeight: isTabActive ? "bold" : "normal", color: this.tabTextColor, fontSize: 14}}>
                             {name}
                         </Animated.Text>
                     </TabHeading>
@@ -58,43 +75,20 @@ export class ParallaxDemo extends Component {
     }
 
     render() {
-        const tabScroll = this.nativeScroll.interpolate({
-            inputRange: [0, SCROLL_HEIGHT, SCROLL_HEIGHT + 1],
-            outputRange: [0, 0, 1]
-        });
-        const headerColor = this.scroll.interpolate({
-            inputRange: [0, SCROLL_HEIGHT, SCROLL_HEIGHT + 1],
-            outputRange: ["transparent", "transparent", COLOR],
-            extrapolate: "clamp"
-        });
-        const imageScale = this.nativeScroll.interpolate({
-            inputRange: [-25, 0],
-            outputRange: [1.1, 1],
-            extrapolateRight: "clamp"
-        });
-        const imageOpacity = this.nativeScroll.interpolate({
-            inputRange: [0, SCROLL_HEIGHT],
-            outputRange: [1, 0],
-            extrapolate: "clamp"
-        });
-        const tabProps = {
-            tabStyle: {backgroundColor: "transparent", width: SCREEN_WIDTH / 2},
-            activeTabStyle: {backgroundColor: "transparent", width: SCREEN_WIDTH / 2}
-        };
         return (
-            <Container>
+            <View>
                 <Animated.View
                     style={{
                         position: "absolute",
                         width: "100%",
                         height: HEADER_HEIGHT,
-                        backgroundColor: headerColor,
+                        backgroundColor: this.headerColor,
                         zIndex: 1,
                     }}>
                     <Header style={{backgroundColor: "transparent"}} hasTabs>
                         <Body>
                         <Title>
-                            <Animated.Text style={{color: this.titleColor, fontWeight: "bold"}}>
+                            <Animated.Text style={{color: this.tabTextColor, fontWeight: "bold"}}>
                                 Tab Parallax
                             </Animated.Text>
                         </Title>
@@ -113,7 +107,7 @@ export class ParallaxDemo extends Component {
                     }], {useNativeDriver: true})} style={{zIndex: 0}}>
                     <Animated.View
                         style={{
-                            transform: [{translateY: Animated.multiply(this.nativeScroll, 0.65)}, {scale: imageScale}],
+                            transform: [{translateY: Animated.multiply(this.nativeScroll, 0.65)}, {scale: this.imageScale}],
                             backgroundColor: COLOR
                         }}>
                         <Animated.Image
@@ -121,11 +115,11 @@ export class ParallaxDemo extends Component {
                             style={{
                                 height: IMAGE_HEIGHT,
                                 width: "100%",
-                                opacity: imageOpacity
+                                opacity: this.imageOpacity
                             }}>
                             <LinearGradient
                                 colors={["rgba(255,255,255,0.9)", "rgba(255,255,255,0.35)", "rgba(255,255,255,0)"]}
-                                locations={[0, 0.3, 1]}
+                                locations={[0, 0.25, 1]}
                                 style={{
                                     position: "absolute",
                                     top: 0,
@@ -138,7 +132,7 @@ export class ParallaxDemo extends Component {
                     <Tabs renderTabBar={(props) => {
                         return <Animated.View
                             style={{
-                                transform: [{translateY: tabScroll}],
+                                transform: [{translateY: this.tabScroll}],
                                 zIndex: 1,
                                 width: "100%",
                                 backgroundColor: "white"
@@ -148,15 +142,15 @@ export class ParallaxDemo extends Component {
                                            underlineStyle={{backgroundColor: this.tabTextColor}}/>
                         </Animated.View>
                     }}>
-                        <Tab heading="Tab 1" {...tabProps}>
+                        <Tab heading="Tab 1" {...this.tabProps}>
                             {this.tabContent}
                         </Tab>
-                        <Tab heading="Tab 2" {...tabProps}>
+                        <Tab heading="Tab 2" {...this.tabProps}>
                             {this.tabContent}
                         </Tab>
                     </Tabs>
                 </Animated.ScrollView>
-            </Container>
+            </View>
         )
     }
 }
