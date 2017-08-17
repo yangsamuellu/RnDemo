@@ -1,11 +1,11 @@
 import React, {Component} from "react";
-import {Animated, Dimensions, Text, TouchableOpacity, View} from "react-native";
+import {Animated, Platform, Dimensions, Text, TouchableOpacity, View} from "react-native";
 import {Body, Header, List, ListItem as Item, ScrollableTab, Tab, TabHeading, Tabs, Title} from "native-base";
 import LinearGradient from "react-native-linear-gradient";
 
 const {width: SCREEN_WIDTH} = Dimensions.get("window");
 const IMAGE_HEIGHT = 250;
-const HEADER_HEIGHT = 64;
+const HEADER_HEIGHT = Platform.OS === "ios" ? 64 : 50;
 const SCROLL_HEIGHT = IMAGE_HEIGHT - HEADER_HEIGHT;
 const THEME_COLOR = "rgba(85,186,255, 1)";
 const FADED_THEME_COLOR = "rgba(85,186,255, 0.8)";
