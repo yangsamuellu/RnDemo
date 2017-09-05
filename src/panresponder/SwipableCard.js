@@ -12,11 +12,9 @@ export class SwipableCard extends Component {
       const screenWidth = Dimensions.get("window").width;
       if (Math.abs(vx) >= 1 || Math.abs(dx) >= 0.5 * screenWidth) {
         Animated.timing(this.translateX, {
-          toValue: vx > 0 ? screenWidth + 200 : -screenWidth - 200,
+          toValue: vx > 0 ? screenWidth : -screenWidth,
           duration: 200
-        }).start(() => {
-          this.props.onDismiss();
-        });
+        }).start(this.props.onDismiss);
       } else {
         Animated.spring(this.translateX, {
           toValue: 0
@@ -28,7 +26,7 @@ export class SwipableCard extends Component {
   render() {
     return (
         <View>
-          <Animated.View style={{transform: [{translateX: this.translateX}], height:50}} {...this._panResponder.panHandlers}>
+          <Animated.View style={{transform: [{translateX: this.translateX}], height:75}} {...this._panResponder.panHandlers}>
             <Card>
               <CardItem>
                 <Body>

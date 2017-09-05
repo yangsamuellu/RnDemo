@@ -4,7 +4,7 @@ import {Body, Container, Header, Title, View} from "native-base";
 import {SwipableCard} from "./SwipableCard";
 
 export class PanResponderDemo extends Component {
-  titles = ["Card #1", "Card #2", "Card #3", "Card #4"];
+  titles = new Array(10).fill(null).map((_, i) => `Card #${i}`);
   state = {
     closedIndices: []
   };
