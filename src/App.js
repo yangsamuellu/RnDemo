@@ -1,10 +1,9 @@
 import React, {Component} from "react";
-import {ParallaxDemo} from "./ParallaxDemo";
-import {CollapsingNav} from "./CollapsingNav";
+import {PanResponderDemo} from "./panresponder/PanResponder";
 
 export class App extends Component {
   render() {
     console.disableYellowBox = true;
-    return <CollapsingNav/>
+    return <PanResponderDemo/>
   }
 }
