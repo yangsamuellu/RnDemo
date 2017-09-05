@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import {Animated, PanResponder, Dimensions} from 'react-native';
-import {Body, Card, CardItem, Container, Content, Header, Text, Title, View} from "native-base";
+import {Animated, Dimensions, PanResponder} from 'react-native';
+import {Body, Card, CardItem, Text, View} from "native-base";
 
 export class SwipableCard extends Component {
   translateX = new Animated.Value(0);
@@ -10,14 +10,15 @@ export class SwipableCard extends Component {
     onPanResponderMove: Animated.event([null, {dx: this.translateX}]),
     onPanResponderRelease: (e, {vx, dx}) => {
       const screenWidth = Dimensions.get("window").width;
-      if (Math.abs(vx) >= 1 || Math.abs(dx) >= 0.5 * screenWidth) {
+      if (Math.abs(vx) >= 0.5 || Math.abs(dx) >= 0.5 * screenWidth) {
         Animated.timing(this.translateX, {
-          toValue: vx > 0 ? screenWidth : -screenWidth,
+          toValue: dx > 0 ? screenWidth : -screenWidth,
           duration: 200
         }).start(this.props.onDismiss);
       } else {
         Animated.spring(this.translateX, {
-          toValue: 0
+          toValue: 0,
+          bounciness: 15
         }).start();
       }
     }
@@ -25,19 +26,20 @@ export class SwipableCard extends Component {
 
   render() {
     return (
-        <View>
-          <Animated.View style={{transform: [{translateX: this.translateX}], height:75}} {...this._panResponder.panHandlers}>
-            <Card>
-              <CardItem>
-                <Body>
-                <Text>
-                  {this.props.title}
-                </Text>
-                </Body>
-              </CardItem>
-            </Card>
-          </Animated.View>
-        </View>
+      <View>
+        <Animated.View
+          style={{transform: [{translateX: this.translateX}], height: 75}} {...this._panResponder.panHandlers}>
+          <Card>
+            <CardItem>
+              <Body>
+              <Text>
+                {this.props.title}
+              </Text>
+              </Body>
+            </CardItem>
+          </Card>
+        </Animated.View>
+      </View>
 
     );
   }
