@@ -9,7 +9,7 @@ export class Colours extends Component {
 
     constructor(props) {
         super(props);
-        this.nativeScroll.addListener(Animated.event([{value: this.nonNativeScroll}], {useNativeDriver: false}));
+        this.nativeScroll.addListener(Animated.event([{emitValue: this.nonNativeScroll}], {useNativeDriver: false}));
     }
 
     render() {

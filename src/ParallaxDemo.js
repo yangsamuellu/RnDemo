@@ -46,7 +46,7 @@ export class ParallaxDemo extends Component {
 
   constructor(props) {
     super(props);
-    this.nScroll.addListener(Animated.event([{value: this.scroll}], {useNativeDriver: false}));
+    this.nScroll.addListener(Animated.event([{emitValue: this.scroll}], {useNativeDriver: false}));
   }
 
   render() {
