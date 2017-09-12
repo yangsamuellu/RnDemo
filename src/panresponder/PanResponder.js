@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {LayoutAnimation, UIManager} from 'react-native';
 import {Body, Container, Header, Title, View} from "native-base";
-import {SwipableCard} from "./SwipableCard";
+import {SwipeableCard} from "./SwipableCard";
 
 export class PanResponderDemo extends Component {
   titles = new Array(10).fill(null).map((_, i) => `Card #${i}`);
@@ -12,6 +12,7 @@ export class PanResponderDemo extends Component {
   constructor(props) {
     super(props);
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+    this.shouldRender = this.shouldRender.bind(this);
   }
 
   shouldRender(index) {
@@ -29,8 +30,8 @@ export class PanResponderDemo extends Component {
           </Body>
         </Header>
         {this.titles.map((title, i) => this.shouldRender(i) &&
-          <View key={i}><SwipableCard title={title} onDismiss={() => {
-            if (this.titles.map((_, i) => this.shouldRender(i)).slice(i + 1, this.titles.length).some((x) => x)) {
+          <View key={i}><SwipeableCard title={title} onDismiss={() => {
+            if ([...new Array(this.titles.length)].slice(i + 1, this.titles.length).some(this.shouldRender)) {
               LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
             }
             this.setState({
@@ -40,5 +41,4 @@ export class PanResponderDemo extends Component {
       </Container>
     );
   }
-
 }

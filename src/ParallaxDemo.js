@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Animated, Platform, Dimensions, Text, TouchableOpacity, View} from "react-native";
+import {Animated, Dimensions, Platform, Text, TouchableOpacity, View} from "react-native";
 import {Body, Header, List, ListItem as Item, ScrollableTab, Tab, TabHeading, Tabs, Title} from "native-base";
 import LinearGradient from "react-native-linear-gradient";
 
@@ -42,15 +42,17 @@ export class ParallaxDemo extends Component {
     outputRange: [1, 0],
   });
   tabContent = (x, i) => <View style={{height: this.state.height}}>
-  <List onLayout={({nativeEvent: {layout: {height}}}) => {this.heights[i] = height; if (this.state.activeTab === i) this.setState({height})}}>
-  {new Array(x).fill(null).map((_, i) => <Item key={i}><Text>Item {i}</Text></Item>)}
-  </List></View>;
+    <List onLayout={({nativeEvent: {layout: {height}}}) => {
+      this.heights[i] = height;
+      if (this.state.activeTab === i) this.setState({height})
+    }}>
+      {new Array(x).fill(null).map((_, i) => <Item key={i}><Text>Item {i}</Text></Item>)}
+    </List></View>;
   heights = [500, 500];
   state = {
     activeTab: 0,
-    height: 500 
-  }
-
+    height: 500
+  };
 
   constructor(props) {
     super(props);
@@ -90,48 +92,50 @@ export class ParallaxDemo extends Component {
                 style={{position: "absolute", height: "100%", width: "100%"}}/>
             </Animated.Image>
           </Animated.View>
-          <Tabs 
-          prerenderingSiblingsNumber={3}
-          onChangeTab={({i}) => {this.setState({height: this.heights[i], activeTab: i})}}
-          renderTabBar={(props) => <Animated.View
-            style={{transform: [{translateY: this.tabY}], zIndex: 1, width: "100%", backgroundColor: "white"}}>
-            <ScrollableTab {...props}
-                           renderTab={(name, page, active, onPress, onLayout) => (
-                             <TouchableOpacity key={page}
-                                               onPress={() => onPress(page)}
-                                               onLayout={onLayout}
-                                               activeOpacity={0.4}>
-                               <Animated.View
-                                 style={{
-                                   flex: 1,
-                                   height: 100,
-                                   backgroundColor: this.tabBg
-                                 }}>
-                                 <TabHeading scrollable
-                                             style={{
-                                               backgroundColor: "transparent",
-                                               width: SCREEN_WIDTH / 2
-                                             }}
-                                             active={active}>
-                                   <Animated.Text style={{
-                                     fontWeight: active ? "bold" : "normal",
-                                     color: this.textColor,
-                                     fontSize: 14
+          <Tabs
+            prerenderingSiblingsNumber={3}
+            onChangeTab={({i}) => {
+              this.setState({height: this.heights[i], activeTab: i})
+            }}
+            renderTabBar={(props) => <Animated.View
+              style={{transform: [{translateY: this.tabY}], zIndex: 1, width: "100%", backgroundColor: "white"}}>
+              <ScrollableTab {...props}
+                             renderTab={(name, page, active, onPress, onLayout) => (
+                               <TouchableOpacity key={page}
+                                                 onPress={() => onPress(page)}
+                                                 onLayout={onLayout}
+                                                 activeOpacity={0.4}>
+                                 <Animated.View
+                                   style={{
+                                     flex: 1,
+                                     height: 100,
+                                     backgroundColor: this.tabBg
                                    }}>
-                                     {name}
-                                   </Animated.Text>
-                                 </TabHeading>
-                               </Animated.View>
-                             </TouchableOpacity>
-                           )}
-                           underlineStyle={{backgroundColor: this.textColor}}/>
-          </Animated.View>
-          }>
+                                   <TabHeading scrollable
+                                               style={{
+                                                 backgroundColor: "transparent",
+                                                 width: SCREEN_WIDTH / 2
+                                               }}
+                                               active={active}>
+                                     <Animated.Text style={{
+                                       fontWeight: active ? "bold" : "normal",
+                                       color: this.textColor,
+                                       fontSize: 14
+                                     }}>
+                                       {name}
+                                     </Animated.Text>
+                                   </TabHeading>
+                                 </Animated.View>
+                               </TouchableOpacity>
+                             )}
+                             underlineStyle={{backgroundColor: this.textColor}}/>
+            </Animated.View>
+            }>
             <Tab heading="Tab 1">
-            {this.tabContent(30, 0)}
+              {this.tabContent(30, 0)}
             </Tab>
             <Tab heading="Tab 2">
-            {this.tabContent(15, 1)}
+              {this.tabContent(15, 1)}
             </Tab>
           </Tabs>
         </Animated.ScrollView>

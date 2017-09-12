@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Animated, Dimensions, PanResponder} from 'react-native';
 import {Body, Card, CardItem, Text, View} from "native-base";
 
-export class SwipableCard extends Component {
+export class SwipeableCard extends Component {
   translateX = new Animated.Value(0);
   _panResponder = PanResponder.create({
     onMoveShouldSetResponderCapture: () => true,
@@ -18,7 +18,7 @@ export class SwipableCard extends Component {
       } else {
         Animated.spring(this.translateX, {
           toValue: 0,
-          bounciness: 15
+          bounciness: 10
         }).start();
       }
     }
@@ -43,5 +43,4 @@ export class SwipableCard extends Component {
 
     );
   }
-
 }
