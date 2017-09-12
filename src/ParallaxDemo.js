@@ -41,12 +41,20 @@ export class ParallaxDemo extends Component {
     inputRange: [0, SCROLL_HEIGHT],
     outputRange: [1, 0],
   });
-  tabContent = (
-    <List>{new Array(20).fill(null).map((_, i) => <Item key={i}><Text>Item {i}</Text></Item>)}</List>);
+  tabContent = (x, i) => <View style={{height: this.state.height}}>
+  <List onLayout={({nativeEvent: {layout: {height}}}) => {this.heights[i] = height; if (this.state.activeTab === i) this.setState({height})}}>
+  {new Array(x).fill(null).map((_, i) => <Item key={i}><Text>Item {i}</Text></Item>)}
+  </List></View>;
+  heights = [500, 500];
+  state = {
+    activeTab: 0,
+    height: 500 
+  }
+
 
   constructor(props) {
     super(props);
-    this.nScroll.addListener(Animated.event([{emitValue: this.scroll}], {useNativeDriver: false}));
+    this.nScroll.addListener(Animated.event([{value: this.scroll}], {useNativeDriver: false}));
   }
 
   render() {
@@ -82,7 +90,10 @@ export class ParallaxDemo extends Component {
                 style={{position: "absolute", height: "100%", width: "100%"}}/>
             </Animated.Image>
           </Animated.View>
-          <Tabs renderTabBar={(props) => <Animated.View
+          <Tabs 
+          prerenderingSiblingsNumber={3}
+          onChangeTab={({i}) => {this.setState({height: this.heights[i], activeTab: i})}}
+          renderTabBar={(props) => <Animated.View
             style={{transform: [{translateY: this.tabY}], zIndex: 1, width: "100%", backgroundColor: "white"}}>
             <ScrollableTab {...props}
                            renderTab={(name, page, active, onPress, onLayout) => (
@@ -117,10 +128,10 @@ export class ParallaxDemo extends Component {
           </Animated.View>
           }>
             <Tab heading="Tab 1">
-              {this.tabContent}
+            {this.tabContent(30, 0)}
             </Tab>
             <Tab heading="Tab 2">
-              {this.tabContent}
+            {this.tabContent(15, 1)}
             </Tab>
           </Tabs>
         </Animated.ScrollView>
