@@ -28,7 +28,8 @@ export class SwipeableCard extends Component {
     return (
       <View>
         <Animated.View
-          style={{transform: [{translateX: this.translateX}], height: 75}} {...this._panResponder.panHandlers}>
+          style={{transform: [{translateX: this.translateX}], height: 75}}
+          {...this._panResponder.panHandlers}>
           <Card>
             <CardItem>
               <Body>

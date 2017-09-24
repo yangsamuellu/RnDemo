@@ -1,8 +1,9 @@
 import React, {Component} from "react";
-import {ParallaxDemo} from "./ParallaxDemo";
+import {Sliding} from "./panresponder/ImagePicker";
+
 export class App extends Component {
   render() {
     console.disableYellowBox = true;
-    return <ParallaxDemo/>
+    return <Sliding/>
   }
 }
