@@ -5,53 +5,52 @@ import {Card} from "./Card";
 const {width: screenWidth, height: screenHeight} = Dimensions.get("window");
 
 export class Sliding extends Component {
-  data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+  bottomPadding = 10;
+  data = new Array(20).fill({
+    name: "John Smith",
+    title: "Marketing Head",
+    address: "Address",
+    email: "johnsmith@gmail.com"
+  });
   colors = ["#ff5252", "#e040fb", "#7c4dff", "#448aff", "#64ffda", "#ff6e40"];
-  translateY = new Animated.Value(-10);
-  bottoms = this.data.map((_, i) => Animated.add(Animated.multiply(this.translateY, -1), i * screenHeight / 8));
+  translateY = new Animated.Value(-this.bottomPadding);
+  bottoms = this.data.map((_, i) =>
+    Animated.add(Animated.multiply(this.translateY, -1), i * screenHeight / 8).interpolate({
+      inputRange: [0, screenHeight - 200, screenHeight - 199],
+      outputRange: [0, screenHeight - 200, screenHeight - 200]
+    }));
 
-  _panResponder = PanResponder.create({
+  panresponder = PanResponder.create({
     onMoveShouldSetResponderCapture: () => true,
     onMoveShouldSetPanResponderCapture: () => true,
     onPanResponderMove: Animated.event([null, {dy: this.translateY}]),
-    onPanResponderRelease: (_, {vy, dy}) => {
+    onPanResponderRelease: (_, {vy}) => {
       this.translateY.extractOffset();
-      console.log(vy * 250);
       Animated.timing(this.translateY, {
         toValue: vy * 1000,
         duration: 1000,
         easing: Easing.poly(0.5)
       }).start(() => {
-        const yOffset = this.bottoms.reduce((prevVal, x) => {
-          return Math.abs(x.__getValue()) < Math.abs(prevVal) ? x.__getValue() : prevVal;
-        }, Infinity);
+        const yOffset = this.bottoms.reduce((prevVal, x) =>
+          Math.abs(x.__getValue()) < Math.abs(prevVal) ? x.__getValue() : prevVal, Infinity);
         this.translateY.extractOffset();
         Animated.spring(this.translateY, {
-          toValue: yOffset - 10,
+          toValue: yOffset - this.bottomPadding,
           duration: 100,
           friction: 5
-        }).start(() => {
-          this.translateY.extractOffset();
-        });
+        }).start(this.translateY.extractOffset.bind(this));
       })
     }
   });
 
-  getBottom(i) {
-    return this.bottoms[i].interpolate({
-      inputRange: [0, screenHeight - 200, screenHeight - 200],
-      outputRange: [0, screenHeight - 200, screenHeight - 201]
-    });
-  }
-
   render() {
     return <View
-      style={{width: screenWidth, height: screenHeight, backgroundColor: "black"}} {...this._panResponder.panHandlers}>
+      style={{width: screenWidth, height: screenHeight, backgroundColor: "black"}} {...this.panresponder.panHandlers}>
       {this.data.slice().reverse().map((x, index) => {
           const i = this.data.length - index - 1;
-          const bottom = this.getBottom(i);
+          const bottom = this.bottoms[i];
           const pullDown = bottom.interpolate({
-            inputRange: [9, 10, 11],
+            inputRange: [this.bottomPadding - 1, this.bottomPadding, this.bottomPadding + 1],
             outputRange: [-4, 0, 0],
             extrapolateLeft: "extend"
           });
@@ -66,7 +65,7 @@ export class Sliding extends Component {
             return x > 0 ? 13 * Math.pow(x, 0.6) : x;
           };
           const opacity = bottom.interpolate({
-            inputRange: [10, screenHeight - 200],
+            inputRange: [this.bottomPadding, screenHeight - 200],
             outputRange: [0, 0.3],
             extrapolate: "clamp"
           });
@@ -76,7 +75,7 @@ export class Sliding extends Component {
                                   transform: [{scale}],
                                   bottom: Animated.add(perspective, pullDown)
                                 }}>
-            <Card color={this.colors[i % this.colors.length]}/>
+            <Card color={this.colors[i % this.colors.length]} data={x}/>
             <Animated.View style={{
               ...StyleSheet.absoluteFillObject,
               width: "100%",

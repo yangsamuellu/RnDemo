@@ -1,9 +1,9 @@
-import React, {Component} from "react";
-import {Sliding} from "./panresponder/ImagePicker";
+import React, { Component } from 'react'
+import { ReactMotion } from './ReactMotion'
 
 export class App extends Component {
-  render() {
-    console.disableYellowBox = true;
-    return <Sliding/>
+  render () {
+    console.disableYellowBox = true
+    return <ReactMotion/>
   }
 }
