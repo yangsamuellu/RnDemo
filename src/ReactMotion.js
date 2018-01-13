@@ -23,12 +23,11 @@ export class ReactMotion extends Component {
     return <View {...this.panResponder.panHandlers}
                  style={{width: screenWidth, height: screenHeight}}>
       <StaggeredMotion defaultStyles={_.range(6).map(() => ({x: 0, y: 0}))}
-                       styles={(prevStyles) => prevStyles.map((a, i) => {
-                         return i === 0 ? this.state : {
+                       styles={(prevStyles) => prevStyles.map((a, i) => i === 0 ? this.state : {
                            x: spring(prevStyles[i - 1].x, presets.gentle),
                            y: spring(prevStyles[i - 1].y, presets.gentle),
                          }
-                       })}>
+                       )}>
         {styles =>
           <View>
             {styles.slice().reverse().map(({x, y}, i) => {

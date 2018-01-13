@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { ReactMotion } from './ReactMotion'
+import Navigator from './navigation'
 
 export class App extends Component {
   render () {
     console.disableYellowBox = true
-    return <ReactMotion/>
+    return <Navigator/>
   }
 }
