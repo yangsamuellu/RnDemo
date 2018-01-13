@@ -1,22 +1,18 @@
 import React, { Component } from 'react'
-import {
-  Body, Button, Container, Content, Footer, FooterTab, Header, Icon, Left, Right, Text,
-  Title,
-} from 'native-base'
+import { StyleSheet, View } from 'react-native'
+import { Button, Text } from 'native-base'
 
 export class Template extends Component {
   render () {
-    const onA = this.props.navigation.state.routes[this.props.navigation.state.index].params.onA
-    return <Container>
-      <Header>
-        <Body>
-        <Title>{onA ? 'Screen A' : 'Screen B'}</Title>
-        </Body>
-      </Header>
-      <Content style={{backgroundColor: onA ? 'green' : 'red'}}>
-        <Button onPress={() => {this.props.navigation.navigate(onA ? 'B' : 'A', {onA: !onA})}}>
-          <Text>Go to {onA ? 'Screen B' : 'Screen A'}</Text></Button>
-      </Content>
-    </Container>
+    const onA = this.props.navigation.state.routes[this.props.navigation.state.index].routeName === 'A'
+    return <View style={{
+      backgroundColor: onA ? '#4CAF50' : '#FF7043',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...StyleSheet.absoluteFillObject,
+    }}>
+      <Button full onPress={() => {this.props.navigation.navigate(onA ? 'B' : 'A')}}>
+        <Text>Go to {onA ? 'Screen B' : 'Screen A'}</Text></Button>
+    </View>
   }
 }
